@@ -20,9 +20,18 @@ app.post("/", async (req, res) => {
     //req.body.content - post content
     //req.body.name - author
 
-    const authorToAdd = await Author.create({
-            name: req.body.name
-    })
+    // const authorToAdd = await Author.create({
+    //         name: req.body.name
+    // })
+
+    const [authorToAdd, created] = await Author.findOrCreate({
+            where: {
+                name: req.body.name
+            },
+            defaults: {
+                 name: req.body.name
+            }
+        })
 
     const postToAdd = await Post.create({
         content: req.body.content
@@ -30,7 +39,14 @@ app.post("/", async (req, res) => {
 
     await authorToAdd.addPost(postToAdd)
 
-    res.send("Item successfully added");
+    if (created)
+    {
+        res.send("Item successfully added to author");
+    }
+    else{
+        res.send("Items successfully added");
+    }
+
 });
 
 // Listen on port 5001
