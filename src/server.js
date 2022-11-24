@@ -1,21 +1,33 @@
+
 const express = require("express"); // Import Express
 const cors = require("cors"); // Import Cors
 const db = require("../db/db");
 const app = express(); // Create Express Web Server
-const { Author, Post } = require("../models")
+const { Author, Post } = require("../models");
+const { ResultWithContext } = require("express-validator/src/chain");
+const PORT = 5001
+const {Op} = require("sequelize")
 
-// TypeError: authorToAdd.addPost is not a function
+// Allow Cross Origin Resource Sharing in our Server
+app.use(cors({
+    origin: 'http://localhost:3000/',
+}));
 
-app.use(cors()); // Allow Cross Origin Resource Sharing in our Server
-app.use(express.json()); // Allow JSON data in Request/Response
+// Allow JSON data in Request/Response
+app.use(express.json());
 
-// GET request returns object with "msg" k/v pair
-app.get("/", (req, res) => {
-  console.log("firing");
-  res.send({ msg: "This is a GET request" });
+// GET request returns all authors with a weak correlation to the string
+app.get("/", async (req, res) => {
+    res.send({author: await Author.findAll({
+        where: {
+            name: {
+                [Op.like]: `%${req.body.name}%`
+            }
+        }
+    })}) 
 });
 
-// POST request returns object with "msg" k/v pair using body for input
+// POST creates a post for a specified author 
 app.post("/", async (req, res) => {
     //req.body.content - post content
     //req.body.name - author
@@ -49,5 +61,31 @@ app.post("/", async (req, res) => {
 
 });
 
+//destroys the posts
+app.delete('/', async (req,res) => {
+
+    //assuming this is an id
+    await Post.destroy({
+        where: {id: req.body.id}
+    })
+    res.send(`Successfully deleted ${req.body.id}`)
+})
+
+//destroys the author and the authors posts
+app.delete('/all', async (req,res) => {
+
+    let author = await Author.findOne({
+        where: {name: req.body.name}
+    })
+
+    await Post.destroy({
+        where: {authorId: author.id}
+    })
+    
+    await author.destroy()
+
+    res.send("successfully destroyed")
+})
+
 // Listen on port 5001
-app.listen(5001);
+app.listen(PORT);

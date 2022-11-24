@@ -1,29 +1,26 @@
 const { Author, Post } = require("../models")
 const db = require("./db")
+const infoToSeed = require("../templates/template")
+
 
 async function seed (){
 
     await db.sync({force :true})
 
-    const author1 = await Author.create({
-        name: "name1"
-    })
-    const author2 = await Author.create({
-        name: "name2"
-    })
-
-    const post1 = await Post.create({
-        content: "asdfghjkl;"
-    }) 
-
-    const post2 = await Post.create({
-        content: "qwertyioypu"
-    }) 
-
-    await author1.addPost(post1)
-
-    await author2.addPost(post2)
-
+    for (let i = 0; i < infoToSeed.length; i++){
+        const [authorToAdd, created] = await Author.findOrCreate({
+            where: {
+                name: infoToSeed[i]["author"]
+            },
+            defaults: {
+                 name: infoToSeed[i]["author"]
+            }
+        })
+        const postToAdd = await Post.create({
+            content: infoToSeed[i]["content"]
+        })
+        await authorToAdd.addPost(postToAdd)
+    }
 
     console.log("Database is populated!")
 
