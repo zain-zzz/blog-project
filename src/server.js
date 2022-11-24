@@ -20,13 +20,8 @@ app.post("/", async (req, res) => {
     //req.body.content - post content
     //req.body.name - author
 
-    const authorToAdd = await Author.findOrCreate({
-        where: {
+    const authorToAdd = await Author.create({
             name: req.body.name
-        },
-        defaults: {
-            name: req.body.name
-        }
     })
 
     const postToAdd = await Post.create({

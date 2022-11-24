@@ -5,18 +5,18 @@ async function seed (){
 
     await db.sync({force :true})
 
-    author1 = await Author.create({
+    const author1 = await Author.create({
         name: "name1"
     })
-    author2 = await Author.create({
+    const author2 = await Author.create({
         name: "name2"
     })
 
-    post1 = await Post.create({
+    const post1 = await Post.create({
         content: "asdfghjkl;"
     }) 
 
-    post2 = await Post.create({
+    const post2 = await Post.create({
         content: "qwertyioypu"
     }) 
 
