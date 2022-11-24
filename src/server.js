@@ -5,14 +5,14 @@ const db = require("../db/db");
 const app = express(); // Create Express Web Server
 const { Author, Post } = require("../models");
 const { ResultWithContext } = require("express-validator/src/chain");
-const PORT = 5001
 const {Op} = require("sequelize")
+const PORT = 5001
 
 // Allow Cross Origin Resource Sharing in our Server
-app.use(cors({
-    origin: 'http://localhost:3000/',
-}));
-
+// app.use(cors({
+//     origin: 'http://localhost:3000/',
+// }));
+app.use(cors())
 // Allow JSON data in Request/Response
 app.use(express.json());
 

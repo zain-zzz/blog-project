@@ -24,8 +24,6 @@ async function seed (){
 
     console.log("Database is populated!")
 
-
-
 }
 
 seed()
