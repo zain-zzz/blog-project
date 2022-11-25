@@ -12,7 +12,10 @@ Post.init({
     },
     img:{
         type: DataTypes.STRING
-    } 
+    },
+    upvotes:{
+        type: DataTypes.INTEGER
+    }
 }, {
     sequelize: db
 })

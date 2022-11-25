@@ -24,9 +24,18 @@ app.get("/", async (req, res) => {
     res.send({author: await Author.findAll(), post: await Post.findAll()}) 
 });
 
+// POST request that increases the post's upvotes by 1 
+//we recieve both the id of the body
+app.post("/upvote", async(req,res) => {
+    const post = await Post.findByPk(req.body.id)
+    post.upvotes += 1
+    await post.save()
+    res.send("upvote added")
+});
+
 
 // GET request returns all authors with a weak correlation to the string
-app.get("/:input", async (req, res) => {
+app.get("/author/:input", async (req, res) => {
     res.send({author: await Author.findAll({
         where: {
             name: {
@@ -35,6 +44,21 @@ app.get("/:input", async (req, res) => {
         }
     })}) 
 });
+
+// Request above but with the title
+app.get("/title/:input", async (req, res) => {
+    res.send({post: await Post.findAll({
+        where: {
+            title: {
+                [Op.like]: `%${req.params.input}%`
+            }
+        }
+    })}) 
+});
+
+
+
+
 
 // POST creates a post for a specified author 
 app.post("/", async (req, res) => {
