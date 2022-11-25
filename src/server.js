@@ -24,6 +24,13 @@ app.get("/", async (req, res) => {
     res.send({author: await Author.findAll(), post: await Post.findAll()}) 
 });
 
+
+//GET author name from authorId
+app.get("/IdtoName:input", async (req, res) => {
+    res.send(await Author.findByPk(req.params.input)) 
+});
+
+
 // POST request that increases the post's upvotes by 1 
 //we recieve both the id of the body
 app.post("/upvote", async(req,res) => {
