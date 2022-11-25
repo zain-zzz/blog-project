@@ -17,7 +17,10 @@ async function seed (){
             }
         })
         const postToAdd = await Post.create({
-            content: infoToSeed[i]["content"]
+            content: infoToSeed[i]["content"],
+            title: infoToSeed[i]["title"],
+            img: infoToSeed[i]["img"],
+            upvotes: infoToSeed[i]["upvotes"] 
         })
         await authorToAdd.addPost(postToAdd)
     }

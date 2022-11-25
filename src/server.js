@@ -1,4 +1,6 @@
 
+
+
 const express = require("express"); // Import Express
 const cors = require("cors"); // Import Cors
 const db = require("../db/db");
@@ -23,8 +25,24 @@ app.get("/", async (req, res) => {
 });
 
 
+//GET author name from authorId
+app.get("/IdtoName/:input", async (req, res) => {
+    res.send(await Author.findByPk(req.params.input)) 
+});
+
+
+// POST request that increases the post's upvotes by 1 
+//we recieve both the id of the body
+app.post("/upvote", async(req,res) => {
+    const post = await Post.findByPk(req.body.id)
+    post.upvotes += 1
+    await post.save()
+    res.send("upvote added")
+});
+
+
 // GET request returns all authors with a weak correlation to the string
-app.get("/:input", async (req, res) => {
+app.get("/author/:input", async (req, res) => {
     res.send({author: await Author.findAll({
         where: {
             name: {
@@ -33,6 +51,21 @@ app.get("/:input", async (req, res) => {
         }
     })}) 
 });
+
+// Request above but with the title
+app.get("/title/:input", async (req, res) => {
+    res.send({post: await Post.findAll({
+        where: {
+            title: {
+                [Op.like]: `%${req.params.input}%`
+            }
+        }
+    })}) 
+});
+
+
+
+
 
 // POST creates a post for a specified author 
 app.post("/", async (req, res) => {
