@@ -16,6 +16,13 @@ app.use(cors())
 // Allow JSON data in Request/Response
 app.use(express.json());
 
+
+// GET request returns all Post
+app.get("/", async (req, res) => {
+    res.send({author: await Post.findAll()}) 
+});
+
+
 // GET request returns all authors with a weak correlation to the string
 app.get("/:input", async (req, res) => {
     res.send({author: await Author.findAll({
