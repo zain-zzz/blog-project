@@ -26,7 +26,7 @@ app.get("/", async (req, res) => {
 
 
 //GET author name from authorId
-app.get("/IdtoName:input", async (req, res) => {
+app.get("/IdtoName/:input", async (req, res) => {
     res.send(await Author.findByPk(req.params.input)) 
 });
 
