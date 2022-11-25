@@ -17,11 +17,11 @@ app.use(cors())
 app.use(express.json());
 
 // GET request returns all authors with a weak correlation to the string
-app.get("/", async (req, res) => {
+app.get("/:input", async (req, res) => {
     res.send({author: await Author.findAll({
         where: {
             name: {
-                [Op.like]: `%${req.body.name}%`
+                [Op.like]: `%${req.params.input}%`
             }
         }
     })}) 
